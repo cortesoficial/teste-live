@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQUADRADRY - Central de Multistreaming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: white; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .status-on { color: #22c55e; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <header class="mb-10 text-center">
+        <h1 class="text-3xl font-bold text-blue-400">CENTRAL DE TRANSMISSÃO 24/7</h1>
+        <p class="text-gray-400">Gerenciamento de Live Simultânea: YouTube, Facebook & Instagram</p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- COLUNA 1: CONFIGURAÇÃO OBS -->
+        <div class="card">
+            <h2 class="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">Configuração OBS</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400">Servidor RTMP (Seu IP):</label>
+                    <input type="text" value="rtmp://SEU_IP_VPS/live" class="w-full bg-slate-900 p-2 rounded mt-1 border border-gray-700 text-blue-300" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400">Chave Única:</label>
+                    <input type="password" value="SQUADRA_LIVE_2024" class="w-full bg-slate-900 p-2 rounded mt-1 border border-gray-700 text-blue-300">
+                </div>
+                <p class="text-xs text-yellow-500 mt-2">⚠️ Envie o sinal em 1080p para o servidor fazer o recorte vertical do Instagram automaticamente.</p>
+            </div>
+        </div>
+
+        <!-- COLUNA 2: MONITORAMENTO DE REDES -->
+        <div class="card lg:col-span-2">
+            <h2 class="text-xl font-semibold mb-4 border-b border-gray-600 pb-2">Status das Redes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-slate-900 p-4 rounded text-center">
+                    <p class="font-bold">YouTube</p>
+                    <span class="status-on text-xs">● ONLINE (16:9)</span>
+                </div>
+                <div class="bg-slate-900 p-4 rounded text-center">
+                    <p class="font-bold">Facebook</p>
+                    <span class="status-on text-xs">● ONLINE (16:9)</span>
+                </div>
+                <div class="bg-slate-900 p-4 rounded text-center">
+                    <p class="font-bold">Instagram</p>
+                    <span class="status-on text-xs">● ONLINE (9:16)</span>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-black aspect-video rounded flex items-center justify-center border border-blue-900">
+                <p class="text-gray-500">Preview do Servidor (Monitor de Transcodificação)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ÁREA TÉCNICA (O que rodar na VPS) -->
+    <div class="mt-10 card">
+        <h2 class="text-xl font-semibold mb-4 text-orange-400">Script de Processamento (Rodar no Servidor)</h2>
+        <pre class="bg-black p-4 rounded overflow-x-auto text-green-400 text-sm">
+# Este comando recebe sua live e corta para o Instagram automaticamente
+ffmpeg -i rtmp://localhost/live/SUA_CHAVE \
+-c:v libx264 -preset fast -b:v 3000k -f flv rtmp://a.rtmp.youtube.com/live2/CHAVE_YT \
+-c:v libx264 -preset fast -b:v 2500k -f flv rtmp://live-api-s.facebook.com:80/rtmp/CHAVE_FB \
+-vf "crop=ih*9/16:ih" -c:v libx264 -preset fast -b:v 2000k -f flv rtmps://live-upload.instagram.com:443/rtmp/CHAVE_IG
+        </pre>
+    </div>
+
+    <footer class="mt-10 text-center text-gray-500 text-sm">
+        <p>Desenvolvido para Gestão de Manutenção e Automação | SQUADRADRY</p>
+    </footer>
+
+</body>
+</html>
