@@ -3,54 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Monitor | Live Dash</title>
+    <title>Live Stream | Rádio Cocal Oficial</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #10b981; /* Esmeralda Industrial */
-            --text-color: #f8fafc;
+            --bg-deep: #0a0f18;
+            --panel-bg: #161e2d;
+            --accent: #10b981; /* Verde Esmeralda */
+            --text: #e2e8f0;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             margin: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        header {
-            width: 100%;
-            padding: 2rem 0;
-            text-align: center;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            border-bottom: 2px solid var(--accent-color);
-            margin-bottom: 2rem;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            background: var(--card-bg);
-            padding: 20px;
+        .main-container {
+            width: 95%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            padding: 15px;
             border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2d3748;
         }
 
-        .video-wrapper {
+        .header-live {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #ef4444; /* Vermelho Live */
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Container do Video para manter proporção 16:9 */
+        .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* Proporção 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
+            width: 100%;
+            padding-top: 56.25%; 
             background: #000;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .video-wrapper iframe {
+        .video-container iframe {
             position: absolute;
             top: 0;
             left: 0;
@@ -59,63 +84,47 @@
             border: none;
         }
 
-        .status-bar {
+        .footer-info {
             margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: #94a3b8;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            background-color: var(--accent-color);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            70% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.7; }
+            text-align: center;
+            font-size: 0.8rem;
+            color: #718096;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>PAINEL DE TRANSMISSÃO</h1>
-    <p>Monitoramento Automático de Live</p>
-</header>
+<div class="main-container">
+    <div class="header-live">
+        <span style="font-weight: 600; letter-spacing: 1px;">RÁDIO COCAL OFICIAL</span>
+        <div class="live-indicator">
+            <div class="dot"></div>
+            AO VIVO
+        </div>
+    </div>
 
-<div class="container">
-    <div class="video-wrapper">
+    <div class="video-container">
         <iframe 
-            src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/SEU_PERFIL_OU_PAGINA/live/&show_text=0" 
+            src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/RadioCocalOficial/live/&show_text=0&autoplay=1" 
             scrolling="no" 
             allowfullscreen="true" 
             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
         </iframe>
     </div>
 
-    <div class="status-bar">
-        <div class="indicator"></div>
-        <span id="status-text">Sincronizado com Facebook Live</span>
+    <div class="footer-info">
+        A transmissão iniciará automaticamente assim que o perfil estiver online.
     </div>
 </div>
 
 <script>
-    // Função para recarregar o iframe a cada 5 minutos 
-    // Isso força o check de nova live se o usuário deixar a página aberta
+    // Atualiza o frame a cada 10 minutos para garantir que ele pegue o início de uma nova live
     setInterval(function() {
-        const iframe = document.querySelector('iframe');
-        const currentSrc = iframe.src;
-        iframe.src = '';
-        iframe.src = currentSrc;
-        console.log("Monitorando nova transmissão...");
-    }, 300000); // 300.000ms = 5 min
+        const frame = document.querySelector('iframe');
+        const url = frame.src;
+        frame.src = '';
+        frame.src = url;
+    }, 600000); 
 </script>
 
 </body>
